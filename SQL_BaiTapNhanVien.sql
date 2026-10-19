@@ -1,0 +1,140 @@
+﻿CREATE DATABASE QuanLyNhanVien
+USE QuanLyNhanVien
+DROP TABLE NHANVIEN
+DROP TABLE KYNANG
+DROP TABLE KYNANG_NV
+DROP TABLE DEAN
+DROP TABLE PHANCONG
+CREATE TABLE NHANVIEN(
+	MANV VARCHAR(20),
+	HOTEN NVARCHAR(40) NOT NULL,
+	PHAI CHAR(10) NOT NULL,
+	NGAYSINH DATE NOT NULL,
+	CONSTRAINT PK_MANV PRIMARY KEY(MANV)
+);
+
+CREATE TABLE KYNANG(
+	MAKN VARCHAR(20),
+	TENKN NVARCHAR(40) NOT NULL,
+	CONSTRAINT PK_MAKN PRIMARY KEY(MAKN)
+);
+
+CREATE TABLE KYNANG_NV(
+	MANV VARCHAR(20),
+	MAKN VARCHAR(20),
+	CONSTRAINT PK_KYNANG PRIMARY KEY(MANV,MAKN),
+	CONSTRAINT FK_MANV_KYNANG FOREIGN KEY(MANV) REFERENCES NHANVIEN(MANV),
+	CONSTRAINT FK_MAKN_KYNANG FOREIGN KEY(MAKN) REFERENCES KYNANG(MAKN)
+);
+
+CREATE TABLE DEAN(
+	MADA VARCHAR(20),
+	TENDA NVARCHAR(200) NOT NULL,
+	NGAYBD DATE NOT NULL,
+	NGAYKT DATE NOT NULL,
+	CONSTRAINT PK_MADA PRIMARY KEY(MADA)
+);
+
+CREATE TABLE PHANCONG(
+	MANV VARCHAR(20),
+	MAKN VARCHAR(20),
+	MADA VARCHAR(20),
+	NGAYPC DATE NOT NULL,
+	CONSTRAINT FK_PHANCONG FOREIGN KEY(MANV,MAKN) REFERENCES KYNANG_NV(MANV,MAKN),
+	CONSTRAINT FK_MADA_PHANCONG FOREIGN KEY(MADA) REFERENCES DEAN(MADA),
+	CONSTRAINT FK_MANV_PHANCONG FOREIGN KEY(MANV) REFERENCES NHANVIEN(MANV),
+	CONSTRAINT FK_MAKN_PHANCONG FOREIGN KEY(MAKN) REFERENCES KYNANG(MAKN)
+);
+SELECT * FROM NHANVIEN
+SELECT * FROM KYNANG
+SELECT * FROM KYNANG_NV
+SELECT * FROM DEAN
+SELECT * FROM PHANCONG
+-- 1. Thêm danh mục Kỹ Năng
+INSERT INTO KYNANG (MAKN, TENKN) VALUES
+('KN01', N'Lập trình Python'),
+('KN02', N'Lập trình Java'),
+('KN03', N'Quản trị CSDL SQL Server'),
+('KN04', N'Phân tích nghiệp vụ (BA)'),
+('KN05', N'Kiểm thử phần mềm (Tester)'),
+('KN06', N'Thiết kế giao diện UI/UX'),
+('KN07', N'Quản lý dự án (PMP)'),
+('KN08', N'DevOps & Cloud AWS');
+
+-- 2. Thêm 20 Nhân Viên
+INSERT INTO NHANVIEN (MANV, HOTEN, PHAI, NGAYSINH) VALUES
+('NV001', N'Nguyễn Văn An', N'Nam', '1990-03-15'),
+('NV002', N'Trần Thị Mai', N'Nữ', '1992-07-22'),
+('NV003', N'Lê Hoàng Long', N'Nam', '1988-11-05'),
+('NV004', N'Phạm Minh Châu', N'Nữ', '1995-01-30'),
+('NV005', N'Võ Quốc Bảo', N'Nam', '1993-09-18'),
+('NV006', N'Đặng Gia Huy', N'Nam', '1991-04-12'),
+('NV007', N'Bùi Phương Thảo', N'Nữ', '1996-08-25'),
+('NV008', N'Đỗ Tuấn Kiệt', N'Nam', '1989-12-03'),
+('NV009', N'Hồ Khánh Linh', N'Nữ', '1997-06-19'),
+('NV010', N'Trịnh Quang Hưng', N'Nam', '1994-02-14'),
+('NV011', N'Ngô Mỹ Duyên', N'Nữ', '1995-10-28'),
+('NV012', N'Lý Vĩnh Phát', N'Nam', '1992-05-17'),
+('NV013', N'Dương Thùy Trang', N'Nữ', '1998-03-09'),
+('NV014', N'Phan Thanh Tùng', N'Nam', '1990-12-21'),
+('NV015', N'Vũ Ngọc Ánh', N'Nữ', '1996-07-04'),
+('NV016', N'Lâm Minh Khang', N'Nam', '1993-08-30'),
+('NV017', N'Mai Trúc Quỳnh', N'Nữ', '1997-11-15'),
+('NV018', N'Đinh Hữu Phước', N'Nam', '1987-09-27'),
+('NV019', N'Cao Bích Hạnh', N'Nữ', '1994-04-06'),
+('NV020', N'Trần Đình Trọng', N'Nam', '1991-10-10');
+
+-- 3. Gán Kỹ Năng cho Nhân Viên (KYNANG_NV)
+INSERT INTO KYNANG_NV (MANV, MAKN) VALUES
+('NV001', 'KN01'), ('NV001', 'KN03'),
+('NV002', 'KN04'), ('NV002', 'KN07'),
+('NV003', 'KN02'), ('NV003', 'KN08'),
+('NV004', 'KN05'),
+('NV005', 'KN01'), ('NV005', 'KN02'),
+('NV006', 'KN06'),
+('NV007', 'KN04'), ('NV007', 'KN05'),
+('NV008', 'KN03'), ('NV008', 'KN08'),
+('NV009', 'KN06'),
+('NV010', 'KN01'), ('NV010', 'KN07'),
+('NV011', 'KN05'),
+('NV012', 'KN02'), ('NV012', 'KN03'),
+('NV013', 'KN04'),
+('NV014', 'KN08'),
+('NV015', 'KN06'),
+('NV016', 'KN01'), ('NV016', 'KN03'),
+('NV017', 'KN05'),
+('NV018', 'KN07'), ('NV018', 'KN08'),
+('NV019', 'KN04'),
+('NV020', 'KN02');
+
+-- 4. Thêm danh mục Đề Án
+INSERT INTO DEAN (MADA, TENDA, NGAYBD, NGAYKT) VALUES
+('DA01', N'Xây dựng Hệ thống CRM Doanh nghiệp', '2025-01-15', '2025-07-15'),
+('DA02', N'Phát triển Cổng thanh toán Mobile Banking', '2025-03-01', '2025-11-30'),
+('DA03', N'Nâng cấp Hạ tầng Cơ sở Dữ liệu Cloud', '2025-05-10', '2025-10-31'),
+('DA04', N'Triển khai Nền tảng E-Learning Trường học', '2025-08-01', '2026-02-28'),
+('DA05', N'Tự động hóa Quy trình Phân tích Dữ liệu', '2025-09-01', '2026-04-30');
+
+-- 5. Phân Công Nhân Viên vào Đề Án (PHANCONG)
+-- Chú ý: Cặp (MANV, MAKN) phải tồn tại trong bảng KYNANG_NV
+INSERT INTO PHANCONG (MANV, MAKN, MADA, NGAYPC) VALUES
+('NV001', 'KN01', 'DA01', '2025-01-20'),
+('NV001', 'KN03', 'DA03', '2025-05-15'),
+('NV002', 'KN07', 'DA01', '2025-01-16'),
+('NV003', 'KN02', 'DA02', '2025-03-05'),
+('NV003', 'KN08', 'DA03', '2025-05-20'),
+('NV004', 'KN05', 'DA01', '2025-02-01'),
+('NV005', 'KN01', 'DA02', '2025-03-10'),
+('NV006', 'KN06', 'DA01', '2025-01-25'),
+('NV007', 'KN04', 'DA02', '2025-03-02'),
+('NV008', 'KN08', 'DA03', '2025-05-12'),
+('NV009', 'KN06', 'DA04', '2025-08-05'),
+('NV010', 'KN07', 'DA04', '2025-08-01'),
+('NV010', 'KN01', 'DA05', '2025-09-05'),
+('NV011', 'KN05', 'DA02', '2025-04-01'),
+('NV012', 'KN03', 'DA03', '2025-06-01'),
+('NV014', 'KN08', 'DA03', '2025-06-15'),
+('NV015', 'KN06', 'DA04', '2025-08-10'),
+('NV016', 'KN01', 'DA05', '2025-09-10'),
+('NV018', 'KN07', 'DA02', '2025-03-01'),
+('NV020', 'KN02', 'DA04', '2025-08-15');
