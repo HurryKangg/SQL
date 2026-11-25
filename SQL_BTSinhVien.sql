@@ -284,12 +284,14 @@ SELECT * FROM KETQUA
 --1 Cho biết mã và tên những lớp thuộc khoa có tên CNTT
 select MALOP, TENLOP
 from LOP l, KHOA k
-where l.MAKHOA = k.MAKHOA and TENKHOA = N'Công nghệ thông tin'
+where l.MAKHOA = k.MAKHOA
+	 and TENKHOA = N'Công nghệ thông tin'
 
 --2 Cho biết mã và họ tên những sinh viên phái nam thuộc lớp có mã lớp là ‘L001’
 select *
 from SINHVIEN s, LOP l
-where s.MALOP = l.MALOP and PHAI = N'Nam' and s.MALOP = 'L001'
+where s.MALOP = l.MALOP 
+	and PHAI = N'Nam' and s.MALOP = 'L001'
 
 --3 Cho biết mã và họ tên những sinh viên phái nam thuộc
 --lớp có mã lớp là ‘L001’ hoặc phái nữ học lớp có mã là ‘L002’
@@ -301,7 +303,9 @@ where (s.MALOP = l.MALOP) and
 --4 Cho biết mã và họ tên những sinh viên phái nam thuộc lớp có tên lớp là ‘08 Đại học tin học’
 select *
 from SINHVIEN s, LOP l
-where s.MALOP = l.MALOP and s.PHAI = N'Nam' and l.TENLOP = N'08 Đại học tin học'
+where s.MALOP = l.MALOP and 
+	s.PHAI = N'Nam' and 
+	l.TENLOP = N'08 Đại học tin học'
 
 --5 Liệt kê danh sách những môn học (MaMH) do sinh viên có mã ‘sv001’ đã học
 SELECT DISTINCT MAMH 
@@ -341,8 +345,7 @@ select k.MAKHOA, k.TENKHOA, COUNT(l.MALOP) soluonglop
 from KHOA k, LOP l
 where k.MAKHOA = l.MAKHOA
 group by k.MAKHOA, k.TENKHOA
-having COUNT(l.MALOP) >= ALL(
-	SELECT COUNT(MALOP) 
+having COUNT(l.MALOP) >= ALL(SELECT COUNT(MALOP) 
     FROM LOP 
     GROUP BY MAKHOA
 )
@@ -395,10 +398,10 @@ group by  m.MAMH,m.TENMH
 having COUNT(*) >= 20
 
 --19.Cho biết mã và tên những môn học có nhiều sinh viên học nhất.
-select m.MAMH, m.MAMH, COUNT(kq.MASV) soluongsv
+select m.MAMH, m.TenMH, COUNT(kq.MASV) soluongsv
 from MONHOC m, KETQUA kq
 where m.MAMH = kq.MAMH
-group by m.MAMH, m.MAMH
+group by m.MAMH, m.TenMH
 having COUNT(kq.MASV) >= ALL(
 	SELECT COUNT(MASV) 
     FROM KETQUA 
@@ -407,4 +410,5 @@ having COUNT(kq.MASV) >= ALL(
 --20.Mã và tên những môn học nào không có sinh viên học.
 select m.MAMH, m.TENMH
 from MONHOC m
-where MAMH not in( select MAMH from KETQUA)
+where MAMH not in( select MAMH 
+				from KETQUA)
